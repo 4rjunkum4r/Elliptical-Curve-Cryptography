@@ -1,0 +1,1 @@
+root.geometry("500x500")  # Size of my window
