@@ -97,6 +97,8 @@ combobox.grid(row=3, column=0)
 #
 #
 #
+def generateKey():
+    gen_btn.config(text="Re-Generate")
 
 
 gen_btn = tk.Button(
@@ -105,7 +107,10 @@ gen_btn = tk.Button(
     cursor="pirate",
     background='Black',
     foreground='White',
-    border=5, font=("Cambria", 10, "bold"))
+    border=5, font=("Cambria", 10, "bold"), command=generateKey)
 gen_btn.grid(row=5, column=0)
+
+key_text_area = tk.Text(mainframe, state="disabled", width=50, height=5)
+key_text_area.grid(row=6, column=0)
 
 root.mainloop()
