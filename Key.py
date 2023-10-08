@@ -1,4 +1,5 @@
 import tkinter as tk
+from tinyec import registry 
 
 root = tk.Tk()
 root.title("Key Generator")
