@@ -2,6 +2,9 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+import os
+from tinyec import registry
+import secrets
 
 # Creating Frame here for gui mode
 root = tk.Tk()
@@ -35,7 +38,7 @@ man_icon_label = tk.Label(
 man_icon_label.grid(row=1, column=0, pady=15)
 
 user_man_lb = tk.Label(
-    mainframe, text='User Key Generation', border=1, relief='groove')
+    mainframe, text='User A Key Generation', border=1, relief='groove')
 user_man_lb.grid(row=2, column=0, pady=15)
 
 # same for woman user
@@ -59,18 +62,20 @@ curve_label.grid(row=4, columnspan=2, pady=15)
 
 
 def print_selection(event):
-    option_selected = var.get()
+    option_selected = curve_option.get()
     if option_selected == "brainpoolP256r1":
         curve_label.config(text='Selected brainpoolP256r1')
-    elif option_selected == "secp256k1":
-        curve_label.config(text='Selected secp256k1')
+    elif option_selected == "secp256r1":
+        curve_label.config(text='Selected secp256r1')
+    elif option_selected == "brainpoolP512r1":
+        curve_label.config(text='Selected brainpoolP512r1')
     else:
         curve_label.config(text='Select the curve')
 
 
-var = tk.StringVar()
-combobox = ttk.Combobox(mainframe, textvariable=var, values=[
-                        "Click to see list of curves ", "brainpoolP256r1", "secp256k1"], state='readonly', width=25)
+curve_option = tk.StringVar()
+combobox = ttk.Combobox(mainframe, textvariable=curve_option, values=[
+                        "Click to see list of curves ", "brainpoolP256r1", "secp256r1", "brainpoolP512r1"], state='readonly', width=25)
 combobox.current(0)
 
 # Bind the `print_selection()` function to the `<<ComboboxSelected>>` event.
@@ -79,7 +84,21 @@ combobox.grid(row=3, columnspan=2, pady=15)
 
 
 def generate_man_key():
+    curve_name = curve_option.get()
+    # The elliptic curve which is used for the ECDH calculations
+    curve = registry.get_curve(curve_name)
+    # Generation of secret key and public key
+
+    man_private_key = secrets.randbelow(curve.field.n)
+    man_public_key = man_private_key * curve.g
+    man_public_key_int = hex(man_public_key.x) + hex(man_public_key.y % 2)[2:]
+
+    user_man_key_text_area.config(state="normal")
+    user_man_key_text_area.delete("1.0", tk.END)
+    user_man_key_text_area.insert(tk.END, man_public_key_int)
+    user_man_key_text_area.config(state="disabled")
     generate_man_button.config(text="Re-Generate")
+    return man_private_key
 
 
 generate_man_button = tk.Button(
@@ -91,8 +110,11 @@ generate_man_button = tk.Button(
     border=5, font=("Cambria", 10, "bold"), command=generate_man_key)
 generate_man_button.grid(row=5, column=0, pady=15)
 
-key_text_area = tk.Text(mainframe, state="disabled", width=50, height=5)
-key_text_area.grid(row=6, column=0, pady=15)
+man_private_key = generate_man_key()
+
+user_man_key_text_area = tk.Text(
+    mainframe, state="disabled", width=50, height=5)
+user_man_key_text_area.grid(row=6, column=0, pady=15)
 
 save_button = tk.Button(
     mainframe,
@@ -103,8 +125,56 @@ save_button = tk.Button(
     border=5, font=("Cambria", 10, "bold"))
 save_button.grid(row=7, column=0, pady=15)
 
+
 def generate_woman_key():
+    curve_name = curve_option.get()
+    # The elliptic curve which is used for the ECDH calculations
+    curve = registry.get_curve(curve_name)
+    # Generation of secret key and public key
+
+    woman_private_key = secrets.randbelow(curve.field.n)
+
+    woman_public_key = woman_private_key * curve.g
+    woman_public_key_int = hex(woman_public_key.x) + \
+        hex(woman_public_key.y % 2)[2:]
+
+    user_woman_key_text_area.config(state="normal")
+    user_woman_key_text_area.delete("1.0", tk.END)
+    user_woman_key_text_area.insert(tk.END, woman_public_key_int)
+    user_woman_key_text_area.config(state="disabled")
+
     generate_woman_button.config(text="Re-Generate")
+    return woman_private_key
+
+
+woman_private_key = generate_woman_key()
+
+
+def compare_keys():
+    A = man_private_key*user_woman_key_text_area.get()
+    A_s = hex(A.x) + \
+        hex(A.y % 2)[2:]
+
+    B = woman_private_key*user_man_key_text_area.get()
+    B_s = hex(A.x) + \
+        hex(A.y % 2)[2:]
+    if (A_s == B_s):
+        compare_label = tk.Label(
+            mainframe, bg='white', width=20, text='Keys matching')
+        compare_label.grid(row=9, columnspan=2, pady=5)
+    else:
+        compare_label = tk.Label(
+            mainframe, bg='white', width=20, text="Keys not matching")
+        compare_label.grid(row=9, columnspan=2, pady=5)
+
+
+compare_button = tk.Button(mainframe,
+                           text="COMPARE",
+                           cursor="pirate",
+                           background='Black',
+                           foreground='White',
+                           border=5, font=("Cambria", 10, "bold"), command=compare_keys)
+compare_button.grid(row=8, column=1, pady=5)
 
 generate_woman_button = tk.Button(
     mainframe,
@@ -115,8 +185,9 @@ generate_woman_button = tk.Button(
     border=5, font=("Cambria", 10, "bold"), command=generate_woman_key)
 generate_woman_button.grid(row=5, column=1, pady=15)
 
-key_text_area = tk.Text(mainframe, state="disabled", width=50, height=5)
-key_text_area.grid(row=6, column=1, pady=15, padx=15)
+user_woman_key_text_area = tk.Text(
+    mainframe, state="disabled", width=50, height=5)
+user_woman_key_text_area.grid(row=6, column=1, pady=15, padx=15)
 
 save_button = tk.Button(
     mainframe,
@@ -127,4 +198,22 @@ save_button = tk.Button(
     border=5, font=("Cambria", 10, "bold"))
 save_button.grid(row=7, column=1, pady=15)
 
+
+def open(filename):
+    root.destroy()
+    mainframe.mainloop()
+    os.chdir(
+        "C:\\Users\\kumar\\Desktop\\CAP791 Project\\Elliptical-Curve-Cryptography")
+    # runnning the python command on cmd to execute both windows
+    os.system('python '+filename)
+
+
+back_button = tk.Button(
+    mainframe,
+    text="BACK",
+    cursor="pirate",
+    background='Black',
+    foreground='White',
+    border=5, font=("Cambria", 10, "bold"), command=lambda: open('WelcomePage.py'))
+back_button.grid(row=8, columnspan=2, pady=15)
 root.mainloop()

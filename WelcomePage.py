@@ -1,6 +1,5 @@
 import tkinter as tk
 import os
-import sys
 
 root = tk.Tk()
 root.title("WELCOME")  # Size of my window
@@ -20,6 +19,8 @@ intro_lb.grid(row=0, column=0, padx=1, pady=1)
 
 
 def open(filename):
+    root.destroy()
+    mainframe.mainloop()
     os.chdir(
         "C:\\Users\\kumar\\Desktop\\CAP791 Project\\Elliptical-Curve-Cryptography")
     # runnning the python command on cmd to execute both windows

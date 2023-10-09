@@ -88,34 +88,118 @@
 ###############################################################################################################################
 ###############################################################################################################################
 
-import tkinter as tk
-from tkinter import ttk
+# import tkinter as tk
+# from tkinter import ttk
 
-window = tk.Tk()
-window.title('My Window')
-window.geometry('100x100')
+# window = tk.Tk()
+# window.title('My Window')
+# window.geometry('100x100')
 
-frame = tk.Frame(window)
-frame.pack()
+# frame = tk.Frame(window)
+# frame.pack()
 
-l = tk.Label(frame, bg='white', width=20, text='Select')
-l.pack()
+# l = tk.Label(frame, bg='white', width=20, text='Select')
+# l.pack()
 
-def print_selection(event):
-    option_selected = var.get()
-    if option_selected == "Python":
-        l.config(text='I love Python')
-    elif option_selected == "C++":
-        l.config(text='I love C++')
-    else:
-        l.config(text='Select')
+# def print_selection(event):
+#     option_selected = var.get()
+#     if option_selected == "Python":
+#         l.config(text='I love Python')
+#     elif option_selected == "C++":
+#         l.config(text='I love C++')
+#     else:
+#         l.config(text='Select')
 
-var = tk.StringVar()
-combobox = ttk.Combobox(frame, textvariable=var, values=["Python", "C++"], state='readonly')
-combobox.current(0)
+# var = tk.StringVar()
+# combobox = ttk.Combobox(frame, textvariable=var, values=["Python", "C++"], state='readonly')
+# combobox.current(0)
 
-# Bind the `print_selection()` function to the `<<ComboboxSelected>>` event.
-combobox.bind("<<ComboboxSelected>>", print_selection)
-combobox.pack()
+# # Bind the `print_selection()` function to the `<<ComboboxSelected>>` event.
+# combobox.bind("<<ComboboxSelected>>", print_selection)
+# combobox.pack()
 
-window.mainloop()
+# window.mainloop()
+
+################################################################
+
+# import tkinter as tk
+
+# root = tk.Tk()
+
+# # Create the new window
+# new_window = tk.Toplevel(root)
+
+# # Create a function to destroy the current window and open the new window
+# def change_window():
+#     root.destroy()
+#     new_window.mainloop()
+
+# # Bind the function to the button's click event
+# button = tk.Button(root, text="Click to switch windows", command=change_window)
+# button.pack()
+
+# # Start the mainloop
+# root.mainloop()
+
+#########################################################################################################
+
+# Importing required libraries used 
+# to perform arithmetic operations 
+# on elliptic curves 
+from tinyec import registry 
+import secrets 
+
+# Function to calculate compress point 
+# of elliptic curves 
+def compress(publicKey):
+    return hex(publicKey.x) + hex(publicKey.y % 2)[2:] 
+
+# The elliptic curve which is used for the ECDH calculations 
+curve = registry.get_curve('brainpoolP256r1') 
+
+# Generation of secret key and public key 
+Ka = secrets.randbelow(curve.field.n) 
+X = Ka * curve.g 
+print("X:", compress(X)) 
+Kb = secrets.randbelow(curve.field.n) 
+Y = Kb * curve.g 
+print("Y:", compress(Y)) 
+print("Currently exchange the publickey (e.g. through Internet)") 
+
+# (A_SharedKey): represents user A 
+# (B_SharedKey): represents user B 
+A_SharedKey = Ka * Y 
+print("A shared key :",compress(A_SharedKey)) 
+B_SharedKey = Kb * X 
+print("(B) shared key :",compress(B_SharedKey)) 
+print("Equal shared keys:", A_SharedKey == B_SharedKey)
+
+############################################################################################################################
+
+# # Import the required library
+# from tkinter import *
+# from tkinter import ttk
+
+# # Create an instance of tkinter frame
+# win=Tk()
+
+# # Set the geometry
+# win.geometry("700x350")
+
+# def get_input():
+#    label.config(text=""+text.get(1.0, "end-1c"))
+
+# # Add a text widget
+# text=Text(win, width=80, height=15)
+# text.insert(END, "")
+# text.pack()
+
+# # Create a button to get the text input
+# b=ttk.Button(win, text="Print", command=get_input)
+# b.pack()
+
+# # Create a Label widget
+# label=Label(win, text="", font=('Calibri 15'))
+# label.pack()
+
+# win.mainloop()
