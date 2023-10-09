@@ -1,10 +1,11 @@
 # IMPORT PACKAGES / MODULE / LIBRARIES
+import os
+import secrets
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk
-import os
 from tinyec import registry
-import secrets
+from PIL import Image, ImageTk
+from tkinter import filedialog
 
 # Creating Frame here for gui mode
 root = tk.Tk()
@@ -84,12 +85,16 @@ combobox.grid(row=3, columnspan=2, pady=15)
 
 
 def generate_man_key():
+    global man_private_key
+    global man_public_key
+    global man_public_key_int
     curve_name = curve_option.get()
     # The elliptic curve which is used for the ECDH calculations
     curve = registry.get_curve(curve_name)
     # Generation of secret key and public key
 
     man_private_key = secrets.randbelow(curve.field.n)
+
     man_public_key = man_private_key * curve.g
     man_public_key_int = hex(man_public_key.x) + hex(man_public_key.y % 2)[2:]
 
@@ -98,7 +103,6 @@ def generate_man_key():
     user_man_key_text_area.insert(tk.END, man_public_key_int)
     user_man_key_text_area.config(state="disabled")
     generate_man_button.config(text="Re-Generate")
-    return man_private_key
 
 
 generate_man_button = tk.Button(
@@ -110,11 +114,25 @@ generate_man_button = tk.Button(
     border=5, font=("Cambria", 10, "bold"), command=generate_man_key)
 generate_man_button.grid(row=5, column=0, pady=15)
 
-man_private_key = generate_man_key()
+# man_private_key = generate_man_key()
 
 user_man_key_text_area = tk.Text(
     mainframe, state="disabled", width=50, height=5)
 user_man_key_text_area.grid(row=6, column=0, pady=15)
+
+
+def save_man_keys():
+    global man_private_key, man_public_key, man_public_key_int
+    if man_private_key is not None and man_public_key is not None:
+        file_path = tk.filedialog.asksaveasfilename(
+            defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
+        if file_path:
+            with open(file_path, "w") as file:
+                file.write("Man Private Key:\n")
+                file.write(str(man_private_key) + "\n")
+                file.write("Man Public Key:\n")
+                file.write(str(man_public_key_int))
+
 
 save_button = tk.Button(
     mainframe,
@@ -122,11 +140,14 @@ save_button = tk.Button(
     cursor="pirate",
     background='Black',
     foreground='White',
-    border=5, font=("Cambria", 10, "bold"))
+    border=5, font=("Cambria", 10, "bold"), command=save_man_keys)
 save_button.grid(row=7, column=0, pady=15)
 
 
 def generate_woman_key():
+    global woman_private_key
+    global woman_public_key
+    global woman_public_key_int
     curve_name = curve_option.get()
     # The elliptic curve which is used for the ECDH calculations
     curve = registry.get_curve(curve_name)
@@ -144,20 +165,16 @@ def generate_woman_key():
     user_woman_key_text_area.config(state="disabled")
 
     generate_woman_button.config(text="Re-Generate")
-    return woman_private_key
-
-
-woman_private_key = generate_woman_key()
 
 
 def compare_keys():
-    A = man_private_key*user_woman_key_text_area.get()
+    A = man_private_key*woman_public_key
     A_s = hex(A.x) + \
         hex(A.y % 2)[2:]
 
-    B = woman_private_key*user_man_key_text_area.get()
-    B_s = hex(A.x) + \
-        hex(A.y % 2)[2:]
+    B = woman_private_key*man_public_key
+    B_s = hex(B.x) + \
+        hex(B.y % 2)[2:]
     if (A_s == B_s):
         compare_label = tk.Label(
             mainframe, bg='white', width=20, text='Keys matching')
@@ -189,17 +206,31 @@ user_woman_key_text_area = tk.Text(
     mainframe, state="disabled", width=50, height=5)
 user_woman_key_text_area.grid(row=6, column=1, pady=15, padx=15)
 
+
+def save_woman_keys():
+    global woman_private_key, woman_public_key
+    if woman_private_key is not None and woman_public_key is not None:
+        file_path = tk.filedialog.asksaveasfilename(
+            defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
+        if file_path:
+            with open(file_path, "w") as file:
+                file.write("Man Private Key:\n")
+                file.write(str(woman_private_key) + "\n")
+                file.write("Man Public Key:\n")
+                file.write(str(woman_public_key_int))
+
+
 save_button = tk.Button(
     mainframe,
     text="Save",
     cursor="pirate",
     background='Black',
     foreground='White',
-    border=5, font=("Cambria", 10, "bold"))
+    border=5, font=("Cambria", 10, "bold"), command=save_woman_keys)
 save_button.grid(row=7, column=1, pady=15)
 
 
-def open(filename):
+def open_window(filename):
     root.destroy()
     mainframe.mainloop()
     os.chdir(
@@ -214,6 +245,6 @@ back_button = tk.Button(
     cursor="pirate",
     background='Black',
     foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=lambda: open('WelcomePage.py'))
+    border=5, font=("Cambria", 10, "bold"), command=lambda: open_window('WelcomePage.py'))
 back_button.grid(row=8, columnspan=2, pady=15)
 root.mainloop()
