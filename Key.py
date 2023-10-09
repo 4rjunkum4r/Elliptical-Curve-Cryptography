@@ -113,4 +113,13 @@ gen_btn.grid(row=5, column=0)
 key_text_area = tk.Text(mainframe, state="disabled", width=50, height=5)
 key_text_area.grid(row=6, column=0)
 
+save_button = tk.Button(
+    mainframe,
+    text="Save",
+    cursor="pirate",
+    background='Black',
+    foreground='White',
+    border=5, font=("Cambria", 10, "bold"))
+save_button.grid(row=7, column=0)
+
 root.mainloop()
