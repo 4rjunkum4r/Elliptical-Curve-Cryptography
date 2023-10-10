@@ -14,10 +14,17 @@ Now it's easy to encrypt and decrypt your file, just do before every exchange of
 intro_lb = tk.Label(mainframe,
                     text=introduction,
                     wrap=500, font=("Cambria", 15, "bold"))
-intro_lb.grid(row=0, column=0, padx=1, pady=1)
+intro_lb.grid(row=0, columnspan=2, padx=1, pady=1)
 
 
-def open(filename):
+encrypt_label = tk.Label(mainframe, text="Encryption Part", relief="groove")
+encrypt_label.grid(row=1, column=0, pady=15)
+
+decrypt_label = tk.Label(mainframe, text="Decryption Part", relief="groove")
+decrypt_label.grid(row=1, column=1, pady=15)
+
+
+def open_window(filename):
     root.destroy()
     mainframe.mainloop()
     os.chdir(
@@ -32,7 +39,7 @@ back_button = tk.Button(
     cursor="pirate",
     background='Black',
     foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=lambda: open('WelcomePage.py'))
+    border=5, font=("Cambria", 10, "bold"), command=lambda: open_window('WelcomePage.py'))
 back_button.grid(row=8, columnspan=2, pady=15)
 
 root.mainloop()
