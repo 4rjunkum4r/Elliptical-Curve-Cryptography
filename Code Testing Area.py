@@ -143,35 +143,35 @@
 
 #########################################################################################################
 
-# # Importing required libraries used 
-# # to perform arithmetic operations 
-# # on elliptic curves 
-# from tinyec import registry 
-# import secrets 
+# # Importing required libraries used
+# # to perform arithmetic operations
+# # on elliptic curves
+# from tinyec import registry
+# import secrets
 
-# # Function to calculate compress point 
-# # of elliptic curves 
+# # Function to calculate compress point
+# # of elliptic curves
 # def compress(publicKey):
-#     return hex(publicKey.x) + hex(publicKey.y % 2)[2:] 
+#     return hex(publicKey.x) + hex(publicKey.y % 2)[2:]
 
-# # The elliptic curve which is used for the ECDH calculations 
-# curve = registry.get_curve('brainpoolP256r1') 
+# # The elliptic curve which is used for the ECDH calculations
+# curve = registry.get_curve('brainpoolP256r1')
 
-# # Generation of secret key and public key 
-# Ka = secrets.randbelow(curve.field.n) 
-# X = Ka * curve.g 
-# print("X:", compress(X)) 
-# Kb = secrets.randbelow(curve.field.n) 
-# Y = Kb * curve.g 
-# print("Y:", compress(Y)) 
-# print("Currently exchange the publickey (e.g. through Internet)") 
+# # Generation of secret key and public key
+# Ka = secrets.randbelow(curve.field.n)
+# X = Ka * curve.g
+# print("X:", compress(X))
+# Kb = secrets.randbelow(curve.field.n)
+# Y = Kb * curve.g
+# print("Y:", compress(Y))
+# print("Currently exchange the publickey (e.g. through Internet)")
 
-# # (A_SharedKey): represents user A 
-# # (B_SharedKey): represents user B 
-# A_SharedKey = Ka * Y 
-# print("A shared key :",compress(A_SharedKey)) 
-# B_SharedKey = Kb * X 
-# print("(B) shared key :",compress(B_SharedKey)) 
+# # (A_SharedKey): represents user A
+# # (B_SharedKey): represents user B
+# A_SharedKey = Ka * Y
+# print("A shared key :",compress(A_SharedKey))
+# B_SharedKey = Kb * X
+# print("(B) shared key :",compress(B_SharedKey))
 # print("Equal shared keys:", A_SharedKey == B_SharedKey)
 
 ############################################################################################################################
@@ -487,71 +487,196 @@
 #         return self
 
 #     def dnd_enter(self, source, event):
-#         self.canvas.focus_set() # Show highlight border
-#         x, y = source.where(self.canvas, event)
-#         x1, y1, x2, y2 = source.canvas.bbox(source.id)
-#         dx, dy = x2-x1, y2-y1
-#         self.dndid = self.canvas.create_rectangle(x, y, x+dx, y+dy)
-#         self.dnd_motion(source, event)
+# #         self.canvas.focus_set() # Show highlight border
+# #         x, y = source.where(self.canvas, event)
+# #         x1, y1, x2, y2 = source.canvas.bbox(source.id)
+# #         dx, dy = x2-x1, y2-y1
+# #         self.dndid = self.canvas.create_rectangle(x, y, x+dx, y+dy)
+# #         self.dnd_motion(source, event)
 
-#     def dnd_motion(self, source, event):
-#         x, y = source.where(self.canvas, event)
-#         x1, y1, x2, y2 = self.canvas.bbox(self.dndid)
-#         self.canvas.move(self.dndid, x-x1, y-y1)
+# #     def dnd_motion(self, source, event):
+# #         x, y = source.where(self.canvas, event)
+# #         x1, y1, x2, y2 = self.canvas.bbox(self.dndid)
+# #         self.canvas.move(self.dndid, x-x1, y-y1)
 
-#     def dnd_leave(self, source, event):
-#         self.top.focus_set() # Hide highlight border
-#         self.canvas.delete(self.dndid)
-#         self.dndid = None
+# #     def dnd_leave(self, source, event):
+# #         self.top.focus_set() # Hide highlight border
+# #         self.canvas.delete(self.dndid)
+# #         self.dndid = None
 
-#     def dnd_commit(self, source, event):
-#         self.dnd_leave(source, event)
-#         x, y = source.where(self.canvas, event)
-#         source.attach(self.canvas, x, y)
+# #     def dnd_commit(self, source, event):
+# #         self.dnd_leave(source, event)
+# #         x, y = source.where(self.canvas, event)
+# #         source.attach(self.canvas, x, y)
 
 
-# def test():
-#     root = tkinter.Tk()
-#     root.geometry("+1+1")
-#     tkinter.Button(command=root.quit, text="Quit").pack()
-#     t1 = Tester(root)
-#     t1.top.geometry("+1+60")
-#     t2 = Tester(root)
-#     t2.top.geometry("+120+60")
-#     t3 = Tester(root)
-#     t3.top.geometry("+240+60")
-#     i1 = Icon("ICON1")
-#     i2 = Icon("ICON2")
-#     i3 = Icon("ICON3")
-#     i1.attach(t1.canvas)
-#     i2.attach(t2.canvas)
-#     i3.attach(t3.canvas)
-#     root.mainloop()
+# # def test():
+# #     root = tkinter.Tk()
+# #     root.geometry("+1+1")
+# #     tkinter.Button(command=root.quit, text="Quit").pack()
+# #     t1 = Tester(root)
+# #     t1.top.geometry("+1+60")
+# #     t2 = Tester(root)
+# #     t2.top.geometry("+120+60")
+# #     t3 = Tester(root)
+# #     t3.top.geometry("+240+60")
+# #     i1 = Icon("ICON1")
+# #     i2 = Icon("ICON2")
+# #     i3 = Icon("ICON3")
+# #     i1.attach(t1.canvas)
+# #     i2.attach(t2.canvas)
+# #     i3.attach(t3.canvas)
+# #     root.mainloop()
 
+
+# # if __name__ == '__main__':
+# #     test()
+
+# import tkinter as tk
+# from tkinterdnd2 import DND_TEXT
+
+# def on_dnd_drop(event):
+#   # Get the file paths of the dropped files.
+#   file_paths = event.data
+
+#   # Display the file paths in the label.
+#   label['text'] = ', '.join(file_paths)
 
 # if __name__ == '__main__':
-#     test()
+#   root = tk.Tk()
+#   root.title('File Drop Example')
+
+#   # Create a label to display the dropped file paths.
+#   label = tk.Label(root, text='Drag and drop files here.')
+#   label.pack()
+
+#   # Bind the drop event.
+#   root.bind('<<Drop>>', on_dnd_drop)
+
+# #   # Start the mainloop.
+# from tkinter import *
+# from tkinter.ttk import *
+# from tkinter.filedialog import askopenfile 
+# import time
+
+# ws = Tk()
+# ws.title('PythonGuides')
+# ws.geometry('400x200') 
+
+
+# def open_file():
+#     file_path = askopenfile(mode='r', filetypes=[('Image Files', '*.jpeg')])
+#     if file_path is not None:
+#         pass
+
+
+# def uploadFiles():
+#     pb1 = Progressbar(
+#         ws, 
+#         orient=HORIZONTAL, 
+#         length=300, 
+#         mode='determinate'
+#         )
+#     pb1.grid(row=4, columnspan=3, pady=20)
+#     for i in range(5):
+#         ws.update_idletasks()
+#         pb1['value'] += 20
+#         time.sleep(1)
+#     pb1.destroy()
+#     Label(ws, text='File Uploaded Successfully!', foreground='green').grid(row=4, columnspan=3, pady=10)
+        
+    
+    
+# adhar = Label(
+#     ws, 
+#     text='Upload Government id in jpg format '
+#     )
+# adhar.grid(row=0, column=0, padx=10)
+
+# adharbtn = Button(
+#     ws, 
+#     text ='Choose File', 
+#     command = lambda:open_file()
+#     ) 
+# adharbtn.grid(row=0, column=1)
+
+# dl = Label(
+#     ws, 
+#     text='Upload Driving License in jpg format '
+#     )
+# dl.grid(row=1, column=0, padx=10)
+
+# dlbtn = Button(
+#     ws, 
+#     text ='Choose File ', 
+#     command = lambda:open_file()
+#     ) 
+# dlbtn.grid(row=1, column=1)
+
+# ms = Label(
+#     ws, 
+#     text='Upload Marksheet in jpg format '
+#     )
+# ms.grid(row=2, column=0, padx=10)
+
+# msbtn = Button(
+#     ws, 
+#     text ='Choose File', 
+#     command = lambda:open_file()
+#     ) 
+# msbtn.grid(row=2, column=1)
+
+# upld = Button(
+#     ws, 
+#     text='Upload Files', 
+#     command=uploadFiles
+#     )
+# upld.grid(row=3, columnspan=3, pady=10)
+
+
+
+# ws.mainloop()
+
+# import tkinter as tk
+# from tkinter import filedialog
+
+# def open_file():
+#     file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
+
+#     if file_path:
+#         with open(file_path, "r") as file:
+#             content = file.read()
+#             text_area.delete(1.0, tk.END)
+#             text_area.insert(tk.END, content)
+
+# app = tk.Tk()
+# app.title("Text File Viewer")
+
+# text_area = tk.Text(app)
+# text_area.pack(expand="true", fill="both")
+
+# open_button = tk.Button(app, text="Open File", command=open_file)
+# open_button.pack()
+
+# app.mainloop()
+
 
 import tkinter as tk
-from tkinterdnd2 import DND_TEXT
 
-def on_dnd_drop(event):
-  # Get the file paths of the dropped files.
-  file_paths = event.data
+def get_user_input():
+    user_input = text_widget.get("1.0", "end-1c")
+    print("User input:", user_input)
 
-  # Display the file paths in the label.
-  label['text'] = ', '.join(file_paths)
+# Create a tkinter window
+window = tk.Tk()
+window.title("User Input with tk.Text")
 
-if __name__ == '__main__':
-  root = tk.Tk()
-  root.title('File Drop Example')
+# Create a tk.Text widget for user input
+text_widget = tk.Text(window, height=5, width=30)
+text_widget.pack()
 
-  # Create a label to display the dropped file paths.
-  label = tk.Label(root, text='Drag and drop files here.')
-  label.pack()
+# Create a button to trigger the input retrieval function
+submit_button = tk.Button(window, text="Submit", command=get_user_input)
+submit_button.pack()
 
-  # Bind the drop event.
-  root.bind('<<Drop>>', on_dnd_drop)
-
-  # Start the mainloop.
-  root.mainloop()
+window.mainloop()

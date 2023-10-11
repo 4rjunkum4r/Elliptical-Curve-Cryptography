@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 from tinyec import registry
 from PIL import Image, ImageTk
-from tkinter import filedialog
+from tkinter import filedialog as fd
 
 # Creating Frame here for gui mode
 root = tk.Tk()
@@ -124,7 +124,7 @@ user_man_key_text_area.grid(row=6, column=0, pady=15)
 def save_man_keys():
     global man_private_key, man_public_key, man_public_key_int
     if man_private_key is not None and man_public_key is not None:
-        file_path = tk.filedialog.asksaveasfilename(
+        file_path = fd.asksaveasfilename(
             defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
         if file_path:
             with open(file_path, "w") as file:
@@ -210,7 +210,7 @@ user_woman_key_text_area.grid(row=6, column=1, pady=15, padx=15)
 def save_woman_keys():
     global woman_private_key, woman_public_key
     if woman_private_key is not None and woman_public_key is not None:
-        file_path = tk.filedialog.asksaveasfilename(
+        file_path = fd.asksaveasfilename(
             defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
         if file_path:
             with open(file_path, "w") as file:
