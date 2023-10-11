@@ -661,22 +661,77 @@
 # app.mainloop()
 
 
-import tkinter as tk
+# import tkinter as tk
 
-def get_user_input():
-    user_input = text_widget.get("1.0", "end-1c")
-    print("User input:", user_input)
+# def get_user_input():
+#     user_input = text_widget.get("1.0", "end-1c")
+#     print("User input:", user_input)
 
-# Create a tkinter window
-window = tk.Tk()
-window.title("User Input with tk.Text")
+# # Create a tkinter window
+# window = tk.Tk()
+# window.title("User Input with tk.Text")
 
-# Create a tk.Text widget for user input
-text_widget = tk.Text(window, height=5, width=30)
-text_widget.pack()
+# # Create a tk.Text widget for user input
+# text_widget = tk.Text(window, height=5, width=30)
+# text_widget.pack()
 
-# Create a button to trigger the input retrieval function
-submit_button = tk.Button(window, text="Submit", command=get_user_input)
-submit_button.pack()
+# # Create a button to trigger the input retrieval function
+# submit_button = tk.Button(window, text="Submit", command=get_user_input)
+# submit_button.pack()
 
-window.mainloop()
+# window.mainloop()
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import ec
+
+# Generate the sender's private key and public key
+sender_private_key = ec.generate_private_key(ec.SECP256K1())
+sender_public_key = sender_private_key.public_key()
+
+# Serialize the sender's public key (send this to the recipient securely)
+sender_public_key_pem = sender_public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
+
+# In a real-world scenario, you would send the sender's public key to the recipient securely
+
+# Generate a shared secret between sender and recipient
+recipient_private_key = ec.generate_private_key(ec.SECP256K1())
+shared_secret = recipient_private_key.exchange(ec.ECDH(), sender_public_key)
+
+# Derive an encryption key from the shared secret
+kdf = PBKDF2HMAC(
+    algorithm=hashes.SHA256(),
+    iterations=100000,
+    salt=b'some_salt',
+    length=32,
+)
+encryption_key = kdf.derive(shared_secret)
+
+# Use the encryption key for symmetric encryption (e.g., AES)
+
+plaintext = b"This is a secret message."
+
+# Ensure that the IV has the same size as the AES block size (16 bytes)
+iv = b'initializationvect'[:16]  # Truncate or pad the IV as needed
+
+# Encrypt the plaintext
+cipher = Cipher(algorithms.AES(encryption_key), modes.CFB(iv), default_backend())
+encryptor = cipher.encryptor()
+ciphertext = encryptor.update(plaintext) + encryptor.finalize()
+print("CIpherText:- ",ciphertext)
+
+# Decrypt the ciphertext
+cipher = Cipher(algorithms.AES(encryption_key), modes.CFB(iv), default_backend())
+decryptor = cipher.decryptor()
+decrypted_plaintext = decryptor.update(ciphertext) + decryptor.finalize()
+
+print(f"Original plaintext: {plaintext.decode('utf-8')}")
+print(f"Decrypted plaintext: {decrypted_plaintext.decode('utf-8')}")

@@ -108,10 +108,7 @@ def generate_man_key():
 generate_man_button = tk.Button(
     mainframe,
     text="GENERATE",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=generate_man_key)
+    border=5, command=generate_man_key)
 generate_man_button.grid(row=5, column=0, pady=15)
 
 # man_private_key = generate_man_key()
@@ -137,11 +134,13 @@ def save_man_keys():
 save_button = tk.Button(
     mainframe,
     text="Save",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=save_man_keys)
+    border=5, command=save_man_keys)
 save_button.grid(row=7, column=0, pady=15)
+#####################
+
+# Planning to add 2 buttons seperate for keys
+
+#####################
 
 
 def generate_woman_key():
@@ -187,19 +186,13 @@ def compare_keys():
 
 compare_button = tk.Button(mainframe,
                            text="COMPARE",
-                           cursor="pirate",
-                           background='Black',
-                           foreground='White',
-                           border=5, font=("Cambria", 10, "bold"), command=compare_keys)
+                           border=5, command=compare_keys)
 compare_button.grid(row=8, column=1, pady=5)
 
 generate_woman_button = tk.Button(
     mainframe,
     text="GENERATE",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=generate_woman_key)
+    border=5, command=generate_woman_key)
 generate_woman_button.grid(row=5, column=1, pady=15)
 
 user_woman_key_text_area = tk.Text(
@@ -223,10 +216,7 @@ def save_woman_keys():
 save_button = tk.Button(
     mainframe,
     text="Save",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=save_woman_keys)
+    border=5, command=save_woman_keys)
 save_button.grid(row=7, column=1, pady=15)
 
 
@@ -242,9 +232,6 @@ def open_window(filename):
 back_button = tk.Button(
     mainframe,
     text="BACK",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=lambda: open_window('WelcomePage.py'))
+    border=5, command=lambda: open_window('WelcomePage.py'))
 back_button.grid(row=8, columnspan=2, pady=15)
 root.mainloop()

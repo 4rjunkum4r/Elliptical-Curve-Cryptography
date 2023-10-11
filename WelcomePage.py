@@ -30,10 +30,7 @@ def open(filename):
 gen_btn = tk.Button(
     mainframe,
     text="CLICK HERE TO GENERATE THE KEY PAIR",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=lambda: open("Key.py"))
+    border=5, command=lambda: open("Key.py"))
 gen_btn.grid(row=1, column=0)
 
 seperator = tk.Label(mainframe,
@@ -43,10 +40,7 @@ seperator.grid(row=2, column=0)
 gen_btn = tk.Button(
     mainframe,
     text="CLICK HERE TO SECURE YOUR FILE",
-    cursor="pirate",
-    background='Black',
-    foreground='White',
-    border=5, font=("Cambria", 10, "bold"), command=lambda: open("Tool.py"))
+    border=5,command=lambda: open("Tool.py"))
 gen_btn.grid(row=3, column=0)
 
 root.mainloop()
