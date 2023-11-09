@@ -40,7 +40,7 @@ seperator.grid(row=2, column=0)
 gen_btn = tk.Button(
     mainframe,
     text="CLICK HERE TO SECURE YOUR FILE",
-    border=5,command=lambda: open("Tool.py"))
+    border=5, command=lambda: open("ToolECC.py"))
 gen_btn.grid(row=3, column=0)
 
 root.mainloop()

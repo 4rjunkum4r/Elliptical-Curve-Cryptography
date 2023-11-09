@@ -1,7 +1,8 @@
 import tkinter as tk
 import os
 from tkinter import filedialog as fd
-
+import random
+from functions import operations, eccproperties
 
 root = tk.Tk()
 root.title("Tool")
@@ -11,7 +12,7 @@ mainframe = tk.Frame(root)
 mainframe.grid(row=0, column=0, padx=20, pady=20)
 
 introduction = """
-Now it's easy to encrypt and decrypt your file, just do before every exchange of secret stuffs
+Now it's easy to encrypt and decrypt your message, just do before every exchange of secret stuffs
 """
 
 intro_lb = tk.Label(mainframe,
@@ -22,21 +23,36 @@ intro_lb.grid(row=0, columnspan=2, padx=1, pady=1)
 #####################################
 ######################################
 
+a = 5829
+b = 2079
+p = 6277101735386680763835789423207666416083908700390324961279
+private_key_A = 7487
+private_key_B = 6737
+G = [2436, 4951]
+radom_integer = random.randint(
+    0, 6277101735386680763835789423207666416083908700390324961279)
 
-def txt2ascii(st):     # converts text to ascii
-    ascii_string = []
-    for i in st:
-        ascii_string.append(ord(i))
-    return ascii_string
+############################
 
 
 def get_text_from_text_area_for_encryption():
-    global user_input,uni_coded_text
+    global user_input, cx1, cx2
     encrypt_text_area.config(state="normal")
     encrypt_text_area.delete("1.0", "end-1c")
     user_input = to_be_encrypt_text_area.get("1.0", "end-1c")
-    uni_coded_text = txt2ascii(user_input)
-    encrypt_text_area.insert("end-1c", uni_coded_text)
+    asciiCoded = operations.txt2ascii(user_input)
+    pairLength = len(operations.toDigits(p, 65536))-1
+    groupList = operations.grouping(asciiCoded, pairLength)
+    bigInt = operations.bigInteger(groupList)
+    cipherPair = operations.grouping(bigInt, 2)
+    cx1 = eccproperties.double_and_add(
+        radom_integer, G, p, a)  # first half of ciphertxt
+    pkey = eccproperties.double_and_add(private_key_B, G, p, a)
+    lamxp = eccproperties.double_and_add(radom_integer, pkey, p, a)
+    cx2 = []  # second half of cipher text
+    for i in cipherPair:
+        cx2.append(eccproperties.ecc_add(i[0], i[1], lamxp[0], lamxp[1], p, a))
+    encrypt_text_area.insert("end-1c", str([cx1, cx2]))
 
 
 def get_text_from_text_area_for_decryption():
@@ -44,7 +60,20 @@ def get_text_from_text_area_for_decryption():
     decrypt_text_area.config(state="normal")
     decrypt_text_area.delete("1.0", "end-1c")
     user_input_de = to_be_decrypt_text_area.get("1.0", "end-1c")
-    decrypt_text_area.insert("end-1c", user_input_de)
+    l2 = eccproperties.double_and_add(private_key_B, cx1, p, a)
+    Cipher = []  # pm
+    for i in cx2:
+        Cipher.append(eccproperties.ecc_add(i[0], i[1], l2[0], -l2[1], p, a))
+    sml_Int = []
+    for i in Cipher:
+        for j in i:
+            sml_Int.append(operations.toDigits(j, 65536))
+    Dicipher = ""
+    for i in sml_Int:
+        for j in i:
+            Dicipher = Dicipher + chr(j)
+
+    decrypt_text_area.insert("end-1c", str(Dicipher))
 
 
 to_be_encrypt_label = tk.Label(
@@ -59,15 +88,6 @@ to_be_encrypt_text_area = tk.Text(
     mainframe, width=50, height=5, state="normal")
 to_be_encrypt_text_area.grid(row=2, column=0, pady=15, padx=15)
 
-public_key_button = tk.Button(
-    mainframe, text="Upload public key of recipient", border=5
-)
-public_key_button.grid(row=3, column=0)
-
-private_key_button = tk.Button(
-    mainframe, text="Upload private key of recipient", border=5
-)
-private_key_button.grid(row=3, column=1)
 
 save_button = tk.Button(
     mainframe,
